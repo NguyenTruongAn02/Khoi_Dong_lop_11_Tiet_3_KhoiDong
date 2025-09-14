@@ -344,7 +344,26 @@
         renderQuestions();
 
         // ======= GAME 2: Mapping =======
-        const items = ["Microsoft Office", "Photoshop", "Unikey", "Acrobat Reader", "Acrobat Pro DC", "LibreOffice", "Inkscape", "GIMP", "Linux Ubuntu", "Python"];
+        const items = [
+            "Microsoft Office", "Photoshop", "Unikey",
+            "Acrobat Reader", "Acrobat Pro DC",
+            "LibreOffice", "Inkscape", "GIMP", "Linux Ubuntu", "Python"
+        ];
+
+        // Gán icon cho từng phần mềm
+        const itemIcons = {
+            "Microsoft Office": "https://img.icons8.com/color/48/microsoft-office-2019.png",
+            "Photoshop": "https://img.icons8.com/color/48/adobe-photoshop.png",
+            "Unikey": "https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_11_23_638363296269865052_unikey-bi-loi-thumb.jpg",
+            "Acrobat Reader": "https://img.icons8.com/color/48/adobe-acrobat.png",
+            "Acrobat Pro DC": "https://cellphones.com.vn/sforum/wp-content/uploads/2021/09/Adobe-Acrobat-Pro-DC-2021.jpg",
+            "LibreOffice": "https://sadesign.vn/pictures/picfullsizes/2024/11/25/tai-libreoffice-phan-mem-thay-the-office-cho-macbook-1.jpg",
+            "Inkscape": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Inkscape_Logo.svg",
+            "GIMP": "https://upload.wikimedia.org/wikipedia/commons/4/45/The_GIMP_icon_-_gnome.svg",
+            "Linux Ubuntu": "https://img.icons8.com/color/48/ubuntu--v1.png",
+            "Python": "https://img.icons8.com/color/48/python.png"
+        };
+
         const correctGroups = {
             thuongmai: ["Microsoft Office", "Photoshop", "Acrobat Pro DC"],
             tudo: ["Unikey", "Acrobat Reader"],
@@ -355,10 +374,15 @@
         items.forEach(item => {
             const div = document.createElement("div");
             div.className = "item";
-            div.textContent = item;
             div.draggable = true;
             div.id = "item-" + item.replace(/\s+/g, '');
             div.ondragstart = drag;
+
+            // Thêm logo + text
+            div.innerHTML = `
+            <img src="${itemIcons[item]}" alt="${item}" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;">
+            ${item}
+        `;
             itemsContainer.appendChild(div);
         });
 
@@ -378,7 +402,7 @@
         function checkMapping() {
             let score = 0;
             for (let group in correctGroups) {
-                const children = Array.from(document.getElementById(group).children).map(c => c.textContent);
+                const children = Array.from(document.getElementById(group).children).map(c => c.textContent.trim());
                 const correct = correctGroups[group];
                 let correctCount = children.filter(c => correct.includes(c)).length;
                 score += correctCount;
