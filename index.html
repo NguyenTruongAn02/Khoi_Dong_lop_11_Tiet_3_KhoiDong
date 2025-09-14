@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🎮 Trò chơi học tập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f7fb;
+        }
+
+        h1 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        /* Menu chính */
+        .menu {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu button {
+            background: darkblue;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu button:hover {
+            background: #4169e1;
+        }
+
+        /* Game container */
+        .game {
+            display: none;
+        }
+
+        /* Ô chữ */
+        .keyword {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .box {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-box {
+            background: white;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 8px;
+            max-width: 800px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            width: 60%;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: darkblue;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 255, 0.3);
+        }
+
+        button.answer-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button.answer-btn:hover {
+            background: #218838;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .wrong {
+            color: red;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        #message {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        /* Ô nhập từ khóa */
+        .keyword-guess {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .keyword-guess input {
+            width: 40%;
+            font-size: 16px;
+        }
+
+        .keyword-guess button {
+            background: orange;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+
+        .keyword-guess button:hover {
+            background: darkorange;
+        }
+
+        /* Mapping game */
+        .game-layout {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .items-box {
+            width: 200px;
+            min-height: 150px;
+            border: 2px dashed #666;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .mapping-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .group {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 250px;
+            border: 2px dashed #888;
+            padding: 5px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .group h3 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        .dropzone {
+            min-height: 100px;
+            border: 2px dashed #aaa;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .item {
+            background: #eee;
+            margin: 5px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: grab;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎮 Trò chơi học tập</h1>
+
+    <!-- Menu -->
+    <div class="menu">
+        <button onclick="showGame('game1')">🧩 Ô chữ bí mật</button>
+        <button onclick="showGame('game2')">🗂️ Ghép nhóm</button>
+    </div>
+
+    <!-- Game 1: Ô chữ -->
+    <div id="game1" class="game">
+        <h2>🧩 Trò chơi Ô chữ bí mật</h2>
+        <div class="keyword" id="keywordBoard"></div>
+        <div id="message"></div>
+        <div id="questions"></div>
+        <div class="keyword-guess">
+            <h3>🔑 Thử đoán từ khóa bí mật</h3>
+            <input type="text" id="keywordInput" placeholder="Nhập từ khóa...">
+            <button onclick="checkKeyword()">Đoán</button>
+            <div id="keywordResult"></div>
+        </div>
+    </div>
+
+    <!-- Game 2: Mapping -->
+    <div id="game2" class="game">
+        <h2>🗂️ Ghép phần mềm vào nhóm</h2>
+        <p><b>Câu hỏi:</b> Em hãy ghép các phần mềm sau đây vào đúng nhóm:</p>
+
+        <div class="game-layout">
+            <!-- Bên trái: danh sách items -->
+            <div id="items" class="items-box">
+                <div style="text-align:center; margin-top:20px;">
+                    <button onclick="checkMapping()">✔ Kiểm tra</button>
+                    <div id="mapResult"></div>
+                </div>
+            </div>
+
+            <!-- Bên phải: khung nhóm -->
+            <div class="mapping-container">
+                <div class="group" ondrop="drop(event,'thuongmai')" ondragover="allowDrop(event)">
+                    <h3>Phần mềm thương mại</h3>
+                    <div id="thuongmai" class="dropzone"></div>
+                </div>
+                <div class="group" ondrop="drop(event,'tudo')" ondragover="allowDrop(event)">
+                    <h3>Phần mềm tự do</h3>
+                    <div id="tudo" class="dropzone"></div>
+                </div>
+                <div class="group" ondrop="drop(event,'nguonmo')" ondragover="allowDrop(event)">
+                    <h3>Phần mềm nguồn mở</h3>
+                    <div id="nguonmo" class="dropzone"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        // ======= MENU =======
+        function showGame(id) {
+            document.querySelectorAll('.game').forEach(g => g.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+        showGame('game1'); // mặc định mở game 1
+
+        // ======= GAME 1: Ô chữ =======
+        const questions = [
+            { id: 1, text: "Một trong những đặc điểm của HĐH Linux có thể chạy đồng thời nhiều chương trình gọi là gì?", answer: "đa nhiệm", key: 'M' },
+            { id: 2, text: "HĐH nào do Google phát triển được sử dụng phổ biến trên điện thoại di động là?", answer: "android", key: 'A' },
+            { id: 3, text: "Hệ điều hành có nguồn gốc từ Unix?", answer: "linux", key: 'N' },
+            { id: 4, text: "Ở phiên bản 1 của Windows phát hành năm 1985 có điểm gì?", answer: "giao diện đồ họa", key: 'G' },
+            { id: 5, text: "Hệ điều hành Windows 95 lần đầu tiên giới thiệu cơ chế gì?", answer: "plug & play", key: 'U' },
+            { id: 6, text: "Hệ điều hành do Apple phát triển được sử dụng phổ biến trên di động là?", answer: "ios", key: 'O' },
+            { id: 7, text: "Môi trường để phần mềm ứng dụng khai thác hiệu quả phần cứng gọi là?", answer: "hệ điều hành", key: 'N' }
+        ];
+        let progress = Array(questions.length).fill(false);
+        const keywordBoard = document.getElementById("keywordBoard");
+        const questionContainer = document.getElementById("questions");
+        const message = document.getElementById("message");
+
+        function renderBoard() {
+            keywordBoard.innerHTML = "";
+            questions.forEach((q, i) => {
+                const box = document.createElement("div");
+                box.className = "box";
+                box.textContent = progress[i] ? q.key : "_";
+                keywordBoard.appendChild(box);
+            });
+        }
+
+        function renderQuestions() {
+            questionContainer.innerHTML = "";
+            questions.forEach((q, i) => {
+                const div = document.createElement("div");
+                div.className = "question-box";
+                div.innerHTML = `
+          <div class="question"><b>Câu ${q.id}:</b> ${q.text}</div>
+          <input type="text" id="answer${i}" placeholder="Nhập câu trả lời...">
+          <button class="answer-btn" onclick="checkAnswer(${i})">Trả lời</button>
+          <span id="result${i}"></span>
+        `;
+                questionContainer.appendChild(div);
+            });
+        }
+
+        function checkAnswer(index) {
+            const input = document.getElementById("answer" + index);
+            const result = document.getElementById("result" + index);
+            let userAns = input.value.trim().toLowerCase();
+            if (userAns === questions[index].answer.toLowerCase()) {
+                progress[index] = true;
+                result.textContent = `✔ Đúng! Ký tự: ${questions[index].key}`;
+                result.className = "correct";
+                renderBoard();
+                if (progress.every(p => p)) {
+                    message.innerHTML = `<h3 class="correct">🎉 Chúc mừng! Từ khóa là: MÃ NGUỒN 🎉</h3>`;
+                }
+            } else {
+                result.textContent = "✘ Sai rồi!";
+                result.className = "wrong";
+            }
+        }
+
+        function checkKeyword() {
+            const input = document.getElementById("keywordInput").value.trim().toLowerCase();
+            const result = document.getElementById("keywordResult");
+            if (input === "mã nguồn" || input === "ma nguon") {
+                result.innerHTML = `<p class="correct">🎉 Chính xác! Từ khóa là: MÃ NGUỒN 🎉</p>`;
+                message.innerHTML = `<h3 class="correct">👏 Bạn đã đoán đúng từ khóa!</h3>`;
+            } else {
+                result.innerHTML = `<p class="wrong">❌ Sai, hãy thử lại!</p>`;
+            }
+        }
+
+        renderBoard();
+        renderQuestions();
+
+        // ======= GAME 2: Mapping =======
+        const items = ["Microsoft Office", "Photoshop", "Unikey", "Acrobat Reader", "Acrobat Pro DC", "LibreOffice", "Inkscape", "GIMP", "Linux Ubuntu", "Python"];
+        const correctGroups = {
+            thuongmai: ["Microsoft Office", "Photoshop", "Acrobat Pro DC"],
+            tudo: ["Unikey", "Acrobat Reader"],
+            nguonmo: ["LibreOffice", "Inkscape", "GIMP", "Linux Ubuntu", "Python"]
+        };
+
+        const itemsContainer = document.getElementById("items");
+        items.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.textContent = item;
+            div.draggable = true;
+            div.id = "item-" + item.replace(/\s+/g, '');
+            div.ondragstart = drag;
+            itemsContainer.appendChild(div);
+        });
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+        function drop(ev, targetId) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const node = document.getElementById(data);
+            ev.target.appendChild(node);
+        }
+
+        function checkMapping() {
+            let score = 0;
+            for (let group in correctGroups) {
+                const children = Array.from(document.getElementById(group).children).map(c => c.textContent);
+                const correct = correctGroups[group];
+                let correctCount = children.filter(c => correct.includes(c)).length;
+                score += correctCount;
+            }
+            document.getElementById("mapResult").innerHTML =
+                `<p class="correct">Bạn ghép đúng ${score}/${items.length} phần mềm!</p>`;
+        }
+    </script>
+</body>
+
+</html>
