@@ -203,6 +203,71 @@
             border-radius: 6px;
             cursor: grab;
         }
+
+        /* Đua ngựa */
+        #raceTrack {
+            position: relative;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 900px;
+            border: 4px solid #444;
+            border-radius: 10px;
+            padding: 10px;
+            background: linear-gradient(#6ab04c, #badc58);
+        }
+
+        .horse-container {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            display: flex;
+            align-items: center;
+        }
+
+        .horse-number {
+            position: absolute;
+            top: 0px;
+            left: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+            background: yellow;
+            border-radius: 50%;
+            padding: 3px 8px;
+            border: 2px solid #000;
+        }
+
+        .lane {
+            position: relative;
+            height: 30px;
+            border-bottom: 2px dashed #333;
+        }
+
+        .lane:last-child {
+            border-bottom: none;
+        }
+
+        .horse {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 70px;
+            transition: left 0.2s linear;
+            transform: scaleX(-1);
+        }
+
+        .finish-line {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: repeating-linear-gradient(45deg,
+                    white,
+                    white 10px,
+                    black 10px,
+                    black 20px);
+        }
     </style>
 </head>
 
@@ -213,6 +278,7 @@
     <div class="menu">
         <button onclick="showGame('game1')">🧩 Ô chữ bí mật</button>
         <button onclick="showGame('game2')">🗂️ Ghép nhóm</button>
+        <button onclick="showGame('game3')">🏇 Đua ngựa</button>
     </div>
 
     <!-- Game 1: Ô chữ -->
@@ -259,8 +325,18 @@
                 </div>
             </div>
         </div>
+    </div>
 
-
+    <!-- Game 3: Đua ngựa -->
+    <div id="game3" class="game">
+        <h2>🏇 Trò chơi Đua ngựa chọn học sinh</h2>
+        <div style="text-align:center;margin-bottom:15px;">
+            <input type="number" id="numHorses" placeholder="Nhập số học sinh (số ngựa)" min="2" max="10">
+            <button onclick="setupRace()">Tạo đường đua</button>
+            <button onclick="startRace()">Bắt đầu đua</button>
+        </div>
+        <div id="raceResult" style="text-align:center;margin-top:20px;font-size:20px;"></div>
+        <div id="raceTrack"></div>
     </div>
 
     <script>
@@ -269,7 +345,7 @@
             document.querySelectorAll('.game').forEach(g => g.style.display = 'none');
             document.getElementById(id).style.display = 'block';
         }
-        showGame('game1'); // mặc định mở game 1
+        showGame('game1'); 
 
         // ======= GAME 1: Ô chữ =======
         const questions = [
@@ -409,6 +485,83 @@
             }
             document.getElementById("mapResult").innerHTML =
                 `<p class="correct">Bạn ghép đúng ${score}/${items.length} phần mềm!</p>`;
+        }
+
+        // ======= GAME 3: Đua ngựa =======
+        let horses = [];
+        let raceInterval;
+        let finished = false;
+
+        function setupRace() {
+            const num = parseInt(document.getElementById("numHorses").value);
+            if (isNaN(num) || num < 2) {
+                alert("Hãy nhập số học sinh (tối thiểu 2)!");
+                return;
+            }
+            const track = document.getElementById("raceTrack");
+            track.innerHTML = "";
+
+            horses = [];
+            finished = false;
+            clearInterval(raceInterval);
+
+            for (let i = 0; i < num; i++) {
+                const lane = document.createElement("div");
+                lane.className = "lane";
+
+                // container để chứa ngựa + số
+                const container = document.createElement("div");
+                container.className = "horse-container";
+                container.style.left = "0px";
+
+                const horse = document.createElement("img");
+                horse.src = "https://img.icons8.com/emoji/96/horse-emoji.png";
+                horse.className = "horse";
+
+                const number = document.createElement("span");
+                number.className = "horse-number";
+                number.textContent = i + 1;
+
+                container.appendChild(horse);
+                container.appendChild(number);
+                lane.appendChild(container);
+                track.appendChild(lane);
+
+                horses.push(container);
+            }
+
+            // Vạch đích
+            const finish = document.createElement("div");
+            finish.className = "finish-line";
+            track.appendChild(finish);
+
+            document.getElementById("raceResult").innerHTML = "";
+        }
+
+        function startRace() {
+            if (horses.length === 0) {
+                alert("Hãy tạo đường đua trước!");
+                return;
+            }
+            finished = false;
+            clearInterval(raceInterval);
+            const trackWidth = document.getElementById("raceTrack").offsetWidth - 100;
+
+            raceInterval = setInterval(() => {
+                horses.forEach(container => {
+                    let pos = parseInt(container.style.left) || 0;
+                    let move = Math.random() * 20;
+                    container.style.left = Math.min(pos + move, trackWidth) + "px";
+
+                    if (!finished && pos + move >= trackWidth) {
+                        finished = true;
+                        clearInterval(raceInterval);
+                        const winner = container.querySelector(".horse-number").textContent;
+                        document.getElementById("raceResult").innerHTML =
+                            `🎉 Ngựa số <b>${winner}</b> đã thắng!`;
+                    }
+                });
+            }, 200);
         }
     </script>
 </body>
