@@ -345,7 +345,7 @@
             document.querySelectorAll('.game').forEach(g => g.style.display = 'none');
             document.getElementById(id).style.display = 'block';
         }
-        showGame('game1'); 
+        showGame('game1');
 
         // ======= GAME 1: Ô chữ =======
         const questions = [
@@ -452,13 +452,14 @@
             div.className = "item";
             div.draggable = true;
             div.id = "item-" + item.replace(/\s+/g, '');
+            div.dataset.name = item;
             div.ondragstart = drag;
 
             // Thêm logo + text
             div.innerHTML = `
-            <img src="${itemIcons[item]}" alt="${item}" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;">
-            ${item}
-        `;
+        <img src="${itemIcons[item]}" alt="${item}" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;">
+        ${item}
+    `;
             itemsContainer.appendChild(div);
         });
 
@@ -478,7 +479,7 @@
         function checkMapping() {
             let score = 0;
             for (let group in correctGroups) {
-                const children = Array.from(document.getElementById(group).children).map(c => c.textContent.trim());
+                const children = Array.from(document.getElementById(group).children).map(c => c.dataset.name);
                 const correct = correctGroups[group];
                 let correctCount = children.filter(c => correct.includes(c)).length;
                 score += correctCount;
