@@ -279,6 +279,7 @@
         <button onclick="showGame('game1')">🧩 Ô chữ bí mật</button>
         <button onclick="showGame('game2')">🗂️ Ghép nhóm</button>
         <button onclick="showGame('game3')">🏇 Đua ngựa</button>
+        <button onclick="showGame('game4')">⏱️ Đồng hồ đếm ngược</button>
     </div>
 
     <!-- Game 1: Ô chữ -->
@@ -337,6 +338,18 @@
         </div>
         <div id="raceResult" style="text-align:center;margin-top:20px;font-size:20px;"></div>
         <div id="raceTrack"></div>
+    </div>
+
+    <!-- ✅ Game 4: Đồng hồ đếm ngược -->
+    <div id="game4" class="game">
+        <h2>⏱️ Đồng hồ đếm ngược</h2>
+        <div style="text-align:center;">
+            <input type="number" id="timerInput" placeholder="Nhập số giây..." min="1"
+                style="padding:10px;font-size:16px;">
+            <button onclick="startTimer()">Bắt đầu</button>
+            <button onclick="stopTimer()">Dừng</button>
+            <h3 id="timerDisplay" style="font-size:32px;color:darkblue;margin-top:10px;">00:00</h3>
+        </div>
     </div>
 
     <script>
@@ -563,6 +576,57 @@
                     }
                 });
             }, 200);
+        }
+        // ======= GAME 4: Đồng hồ đếm ngược có âm thanh =======
+        let countdown, secondsLeft = 0;
+        const alarmEnd = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+        const alarmTick = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg"); // tiếng beep ngắn 15s cuối
+
+        function startTimer() {
+            const input = document.getElementById("timerInput");
+            const display = document.getElementById("timerDisplay");
+            secondsLeft = parseInt(input.value);
+            if (isNaN(secondsLeft) || secondsLeft <= 0) {
+                alert("Hãy nhập số giây hợp lệ!");
+                return;
+            }
+
+            clearInterval(countdown);
+            updateDisplay();
+
+            countdown = setInterval(() => {
+                secondsLeft--;
+                updateDisplay();
+
+                // 🔔 Phát tiếng beep trong 15 giây cuối
+                if (secondsLeft > 0 && secondsLeft <= 15) {
+                    alarmTick.currentTime = 0;
+                    alarmTick.play();
+                    display.style.color = "orange";
+                }
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdown);
+                    display.textContent = "⏰ Hết giờ!";
+                    display.style.color = "red";
+                    alarmEnd.play();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdown);
+            const display = document.getElementById("timerDisplay");
+            display.textContent = "⏸️ Dừng lại";
+            display.style.color = "gray";
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById("timerDisplay");
+            const m = Math.floor(secondsLeft / 60);
+            const s = secondsLeft % 60;
+            display.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+            display.style.color = "darkblue";
         }
     </script>
 </body>

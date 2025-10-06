@@ -1,0 +1,263 @@
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f7fb;
+        }
+
+        h1 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        /* Menu chính */
+        .menu {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu button {
+            background: darkblue;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu button:hover {
+            background: #4169e1;
+        }
+
+        /* Game container */
+        .game {
+            display: none;
+        }
+
+        /* Ô chữ */
+        .keyword {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .box {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-box {
+            background: white;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 8px;
+            max-width: 800px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            width: 60%;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: darkblue;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 255, 0.3);
+        }
+
+        button.answer-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button.answer-btn:hover {
+            background: #218838;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .wrong {
+            color: red;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        #message {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        /* Ô nhập từ khóa */
+        .keyword-guess {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .keyword-guess input {
+            width: 40%;
+            font-size: 16px;
+        }
+
+        .keyword-guess button {
+            background: orange;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+
+        .keyword-guess button:hover {
+            background: darkorange;
+        }
+
+        /* Mapping game */
+        .game-layout {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .items-box {
+            width: 200px;
+            min-height: 150px;
+            border: 2px dashed #666;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .mapping-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .group {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 250px;
+            border: 2px dashed #888;
+            padding: 5px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .group h3 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        .dropzone {
+            min-height: 100px;
+            border: 2px dashed #aaa;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .item {
+            background: #eee;
+            margin: 5px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: grab;
+        }
+
+        /* Đua ngựa */
+        #raceTrack {
+            position: relative;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 900px;
+            border: 4px solid #444;
+            border-radius: 10px;
+            padding: 10px;
+            background: linear-gradient(#6ab04c, #badc58);
+        }
+
+        .horse-container {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            display: flex;
+            align-items: center;
+        }
+
+        .horse-number {
+            position: absolute;
+            top: 0px;
+            left: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+            background: yellow;
+            border-radius: 50%;
+            padding: 3px 8px;
+            border: 2px solid #000;
+        }
+
+        .lane {
+            position: relative;
+            height: 30px;
+            border-bottom: 2px dashed #333;
+        }
+
+        .lane:last-child {
+            border-bottom: none;
+        }
+
+        .horse {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 70px;
+            transition: left 0.2s linear;
+            transform: scaleX(-1);
+        }
+
+        .finish-line {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: repeating-linear-gradient(45deg,
+                    white,
+                    white 10px,
+                    black 10px,
+                    black 20px);
+        }
